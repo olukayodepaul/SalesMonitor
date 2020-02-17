@@ -4,7 +4,6 @@
     <string name="app_name">SalesMonitor</string>
     <string-array name="outlet_class">
         <item>Select Outlet Class</item>
-        <item>Outlet Not Found</item>
         <item>Correct Trader</item>
         <item>Horeca</item>
         <item>Mega Trader</item>

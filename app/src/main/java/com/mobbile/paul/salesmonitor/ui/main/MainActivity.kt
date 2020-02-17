@@ -45,8 +45,9 @@ class MainActivity : DaggerAppCompatActivity() {
     var totalVolume: String = ""
     var remarks: String = ""
 
-    var repid:Int = 0
-    var urno:Int = 0
+    var repid: Int = 0
+    var urno: Int = 0
+    var buttonControl: Int = 0
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,8 +55,8 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
         vmodel = ViewModelProviders.of(this, modelFactory)[MainViewModel::class.java]
         preferences = getSharedPreferences(prefencesData, Context.MODE_PRIVATE)
-        repid = intent.getIntExtra("rep_id",0)
-        urno = intent.getIntExtra("urno",0)
+        repid = intent.getIntExtra("rep_id", 0)
+        urno = intent.getIntExtra("urno", 0)
 
         pagerAdapter = PaginationAdpter()
         pager.offscreenPageLimit = 3
@@ -77,6 +78,9 @@ class MainActivity : DaggerAppCompatActivity() {
                     product_question.visibility = View.VISIBLE
                     outlet_class.visibility = View.VISIBLE
                     fab.setImageResource(R.drawable.ic_chevron_right)
+                    product_seen_if_cus_r_m_no_remark.visibility = View.GONE
+                    _remark_one.visibility = View.GONE
+                    buttonControl = 1
                 }
                 else -> {
                     outlet_not_seen.visibility = View.VISIBLE
@@ -84,6 +88,73 @@ class MainActivity : DaggerAppCompatActivity() {
                     product_question.visibility = View.GONE
                     outlet_class.visibility = View.GONE
                     fab.setImageResource(R.drawable.ic_submit)
+                    product_seen_if_cus_r_m_no_remark.visibility = View.VISIBLE
+                    _remark_one.visibility = View.VISIBLE
+                    buttonControl = 2
+                }
+            }
+        }
+
+        confirm_phone.setOnCheckedChangeListener { group, checkedId ->
+            val radio: RadioButton = findViewById(checkedId)
+            when (radio.text) {
+                "Incorrect Phone Number" -> {
+                    enter_correct_phone_number.visibility = View.VISIBLE
+                    enter_correct_phone_number_new.visibility = View.VISIBLE
+                }
+                else -> {
+                    enter_correct_phone_number.visibility = View.GONE
+                    enter_correct_phone_number_new.visibility = View.GONE
+                }
+            }
+        }
+
+        customer_buying_from.setOnCheckedChangeListener { group, checkedId ->
+            val radio: RadioButton = findViewById(checkedId)
+            when (radio.text) {
+                "Open market (WholeSeller)" -> {
+                    if_whole_seller.visibility = View.VISIBLE
+                    if_whole_seller_re.visibility = View.VISIBLE
+                }
+                else -> {
+                    if_whole_seller.visibility = View.GONE
+                    if_whole_seller_re.visibility = View.GONE
+                }
+            }
+        }
+
+        cust_satn.setOnCheckedChangeListener { group, checkedId ->
+            val radio: RadioButton = findViewById(checkedId)
+            when (radio.text) {
+                "No" -> {
+                    visit_satis_1.visibility = View.VISIBLE
+                    visit_satis_2.visibility = View.VISIBLE
+                }
+                else -> {
+                    visit_satis_1.visibility = View.GONE
+                    visit_satis_2.visibility = View.GONE
+                }
+            }
+        }
+
+        outlet_puchase1.setOnCheckedChangeListener { group, checkedId ->
+            val radio: RadioButton = findViewById(checkedId)
+            when (radio.text) {
+                "Yes" -> {
+                    last_date_purchase.visibility = View.VISIBLE
+                    last_date_purchase_values.visibility = View.VISIBLE
+                    product_seen_if_cus_r.visibility = View.VISIBLE
+                    t_volume.visibility = View.VISIBLE
+                    purchase_reasons.visibility = View.GONE
+                    purchase_reasons_values.visibility = View.GONE
+                }
+                else -> {
+                    last_date_purchase.visibility = View.GONE
+                    last_date_purchase_values.visibility = View.GONE
+                    product_seen_if_cus_r.visibility = View.GONE
+                    t_volume.visibility = View.GONE
+                    purchase_reasons.visibility = View.VISIBLE
+                    purchase_reasons_values.visibility = View.VISIBLE
                 }
             }
         }
@@ -134,13 +205,13 @@ class MainActivity : DaggerAppCompatActivity() {
 
     @SuppressLint("RestrictedApi")
     private fun cacheInLocalDb(l1: Int) {
-
         when (l1) {
             0 -> {
                 //do the next here
                 outletClass = outlet_class.selectedItem.toString()
                 groupButtonSeenOutlet = findViewById(outlet_seen.checkedRadioButtonId) ?: null
-                groupButtonNotSeenOutlet = findViewById(outlet_not_seen_group.checkedRadioButtonId) ?: null
+                groupButtonNotSeenOutlet =
+                    findViewById(outlet_not_seen_group.checkedRadioButtonId) ?: null
 
                 if (outletClass == "Select Outlet Class" || groupButtonSeenOutlet == null) {
                     Toast.makeText(
@@ -155,16 +226,18 @@ class MainActivity : DaggerAppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    pagination()
+                    if (buttonControl == 1) {
+                        pagination()
+                    } else if (buttonControl == 2) {
+                        callQuestionnareWithOutletSeen()
+                    }
                 }
             }
 
             1 -> {
-
                 customerBuyingFrom = findViewById(customer_buying_from.checkedRadioButtonId) ?: null
                 custSatisfaction = findViewById(cust_satn.checkedRadioButtonId) ?: null
                 smsToken = findViewById(sms_token.checkedRadioButtonId) ?: null
-
                 if (customerBuyingFrom == null || custSatisfaction == null || smsToken == null) {
                     Toast.makeText(
                         applicationContext,
@@ -205,10 +278,30 @@ class MainActivity : DaggerAppCompatActivity() {
         var TAG = "compafdndfnf"
     }
 
+    private fun callQuestionnareWithOutletSeen() {
+
+        groupButtonSeenOutlet = findViewById(outlet_seen.checkedRadioButtonId) ?: null
+        groupButtonNotSeenOutlet = findViewById(outlet_not_seen_group.checkedRadioButtonId) ?: null
+        val supervisorId = preferences!!.getInt("pre_employee_id", 0)
+
+        val allData = PostToServer()
+        allData.outletclass = ""
+        allData.groupbuttonseenoutlet = (groupButtonSeenOutlet!!.text as String?).toString()
+        allData.groupButtonnotseenoutlet = (groupButtonNotSeenOutlet!!.text as String?).toString()
+        allData.customeruyingfrom = ""
+        allData.custsatisfaction = ""
+        allData.smstoken = ""
+        allData.totalvolume = ""
+        allData.remarks = ""
+        allData.supervisorid = supervisorId
+        allData.urno = urno
+        allData.repid = repid
+        vmodel.moveQuestionareToServer(allData).observe(this, pushDataToServer)
+    }
+
     private fun callQuestionnaireApi() {
 
         var outlets = ""
-
         outletClass = outlet_class.selectedItem.toString()
         groupButtonSeenOutlet = findViewById(outlet_seen.checkedRadioButtonId) ?: null
         groupButtonNotSeenOutlet = findViewById(outlet_not_seen_group.checkedRadioButtonId) ?: null
@@ -217,9 +310,9 @@ class MainActivity : DaggerAppCompatActivity() {
         smsToken = findViewById(sms_token.checkedRadioButtonId) ?: null
         totalVolume = t_volume.text.toString()
         remarks = remark.text.toString()
-        val supervisorId = preferences!!.getInt("pre_employee_id",0)
+        val supervisorId = preferences!!.getInt("pre_employee_id", 0)
 
-        if(groupButtonSeenOutlet!!.text == "No"){
+        if (groupButtonSeenOutlet!!.text == "No") {
             outlets = (groupButtonNotSeenOutlet!!.text as String?).toString()
         }
 
@@ -235,7 +328,6 @@ class MainActivity : DaggerAppCompatActivity() {
         allData.supervisorid = supervisorId
         allData.urno = urno
         allData.repid = repid
-
         vmodel.moveQuestionareToServer(allData).observe(this, pushDataToServer)
     }
 

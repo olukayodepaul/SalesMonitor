@@ -133,14 +133,15 @@
                     android:textColor="#474243"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <Spinner
                     android:id="@+id/outlet_class"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/spinner_background"
-                    android:entries="@array/outlet_class" />
+                    android:entries="@array/outlet_class"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/outlet_not_seen"
@@ -189,6 +190,30 @@
                         android:text="Never Existed" />
 
                 </RadioGroup>
+
+                <TextView
+                    android:id="@+id/product_seen_if_cus_r_m_no_remark"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30sp"
+                    android:layout_marginBottom="5sp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Remark"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="#474243"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/_remark_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/spinner_background"
+                    android:inputType="text"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -210,6 +235,67 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16sp"
                     app:srcCompat="@drawable/ic_number02" />
+
+                <TextView
+                    android:id="@+id/confirm_phone_mother"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30sp"
+                    android:layout_marginBottom="5sp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Confirmed Customer's Phone Number"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="#474243"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <RadioGroup
+                    android:id="@+id/confirm_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    tools:visibility="visible">
+
+                    <RadioButton
+                        android:id="@+id/confirm_phone_one"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Correct Phone Number" />
+
+                    <RadioButton
+                        android:id="@+id/confirm_phone_two"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Incorrect Phone Number" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/enter_correct_phone_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Provide Correct Phone Number"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="#474243"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/enter_correct_phone_number_new"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/spinner_background"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/product_seen_if_"
@@ -237,15 +323,46 @@
                         android:id="@+id/fabricationRadioButto_"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Motorbike Rep" />
+                        android:text="GBNL Motorbike Rep" />
+
+                    <RadioButton
+                        android:id="@+id/signageRadioButt_q"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Other Motorbike Rep" />
 
                     <RadioButton
                         android:id="@+id/signageRadioButt_"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Open market" />
-
+                        android:text="Open market (WholeSeller)" />
                 </RadioGroup>
+
+                <TextView
+                    android:id="@+id/if_whole_seller"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Specify whole seller name if known"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="#474243"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/if_whole_seller_re"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/spinner_background"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/product_seen_if_cus"
@@ -282,6 +399,32 @@
                         android:text="No" />
 
                 </RadioGroup>
+
+                <TextView
+                    android:id="@+id/visit_satis_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Give reason"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="#474243"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/visit_satis_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/spinner_background"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/product_seen_if_cus_"
@@ -339,27 +482,120 @@
                     android:layout_marginTop="16sp"
                     app:srcCompat="@drawable/ic_number03" />
 
+
                 <TextView
-                    android:id="@+id/product_seen_if_cus_r"
+                    android:id="@+id/outlet_purchase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30sp"
                     android:layout_marginBottom="5sp"
                     android:fontFamily="@font/roboto_regular"
-                    android:text="Total Vol purchased by customer on visit (Roll)"
+                    android:text="Did Outlet purchase?"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textColor="#474243"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
+                <RadioGroup
+                    android:id="@+id/outlet_puchase1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    tools:visibility="visible">
+
+                    <RadioButton
+                        android:id="@+id/outlet_puchase_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yes" />
+
+                    <RadioButton
+                        android:id="@+id/outlet_puchase_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No" />
+
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/last_date_purchase"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Last purchase date"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="#474243"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/last_date_purchase_values"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/spinner_background"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/product_seen_if_cus_r"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Total Vol purchased by customer on visit (Roll)"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="#474243"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/t_volume"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
                     android:background="@drawable/spinner_background"
                     android:inputType="numberDecimal"
                     android:textColor="@color/black"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/purchase_reasons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="5sp"
+                    android:layout_marginBottom="5sp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:text="Give reason"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="#474243"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/purchase_reasons_values"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/spinner_background"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/product_seen_if_cus_r_m"
@@ -382,7 +618,6 @@
                     android:inputType="text"
                     android:textColor="@color/black"
                     android:textSize="15sp" />
-
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
