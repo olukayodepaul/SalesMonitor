@@ -76,6 +76,7 @@ class MainActivity : DaggerAppCompatActivity() {
                     outlet_not_seen_group.visibility = View.GONE
                     product_question.visibility = View.VISIBLE
                     outlet_class.visibility = View.VISIBLE
+                    fab.setImageResource(R.drawable.ic_chevron_right)
                 }
                 else -> {
                     outlet_not_seen.visibility = View.VISIBLE
