@@ -1,0 +1,31 @@
+<resources>
+
+
+    <string name="app_name">SalesMonitor</string>
+    <string-array name="outlet_class">
+        <item>Select Outlet Class</item>
+        <item>Outlet Not Found</item>
+        <item>Correct Trader</item>
+        <item>Horeca</item>
+        <item>Mega Trader</item>
+        <item>Prompt Sales</item>
+        <item>RD Outlet</item>
+        <item>Retailer 1</item>
+        <item>Retailer 2</item>
+        <item>Retailer 3</item>
+        <item>RME</item>
+        <item>Sharp Trader</item>
+        <item>Wholesale</item>
+        <item>Night Club</item>
+        <item>Consumption Outlet</item>
+        <item>Provision Store</item>
+        <item>Neighbourhood Store</item>
+        <item>Kiosk</item>
+        <item>Table Top</item>
+        <item>Hawker Box</item>
+        <item>Supermarket/Hypermarket Chain</item>
+        <item>Supermarket</item>
+        <item>Petro Forecourt</item>
+        <item>20/Hypermaket Chain</item>
+    </string-array>
+</resources>
