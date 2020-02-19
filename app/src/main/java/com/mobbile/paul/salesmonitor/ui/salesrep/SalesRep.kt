@@ -62,6 +62,8 @@ class SalesRep : BaseActivity() {
         val intent: Intent?
         intent = Intent(this, Outlets::class.java)
         intent.putExtra("rep_id",item.rep_id)
+        intent.putExtra("route", item.route)
+        intent.putExtra("repname", item.repname)
         startActivity(intent)
     }
 }

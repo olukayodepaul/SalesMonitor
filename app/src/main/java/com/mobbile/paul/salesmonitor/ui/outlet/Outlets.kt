@@ -17,6 +17,8 @@ import com.mobbile.paul.salesmonitor.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_outlets.*
 import kotlinx.android.synthetic.main.activity_outlets.backbtn
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class Outlets : BaseActivity() {
@@ -29,16 +31,22 @@ class Outlets : BaseActivity() {
     private lateinit var mAdapter: OutletAdapter
 
     var repid:Int = 0
+    var route:String = ""
+    var repname:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_outlets)
         vmodel = ViewModelProviders.of(this, modelFactory)[OutletViewModel::class.java]
         repid = intent.getIntExtra("rep_id",0)
+        route = intent.getStringExtra("route")!!
+        repname = intent.getStringExtra("repname")!!
         initViews()
     }
 
     private fun initViews() {
+
+        titles_r.text = "$repname ($route)"
 
         backbtn.setOnClickListener {
             onBackPressed()
@@ -66,6 +74,9 @@ class Outlets : BaseActivity() {
         intent = Intent(this, MainActivity::class.java)
         intent.putExtra("urno",item.urno)
         intent.putExtra("rep_id",repid)
+        intent.putExtra("repname",repname)
+        intent.putExtra("route",route)
+        intent.putExtra("start_time", SimpleDateFormat("HH:mm:ss").format(Date()))
         startActivity(intent)
     }
 }

@@ -35,7 +35,37 @@ data class PostToServer(
     var urno: Int = 0,
     @SerializedName("repid")
     @Expose
-    var repid: Int = 0
+    var repid: Int = 0,
+    @SerializedName("if_incorrect_phone")
+    @Expose
+    var if_incorrect_phone: String = "",
+    @SerializedName("if_open_market")
+    @Expose
+    var if_open_market: String = "",
+    @SerializedName("if_customer_not_satisfy_reason")
+    @Expose
+    var if_customer_not_satisfy_reason: String = "",
+    @SerializedName("outlet_purchase_yes_qty_purchase")
+    @Expose
+    var outlet_purchase_yes_qty_purchase: String = "",
+    @SerializedName("outlet_purchase_yes_last_puchase_before_visit")
+    @Expose
+    var outlet_purchase_yes_last_puchase_before_visit: String = "",
+    @SerializedName("outlet_purchase_yes_qty_purchase_before_visit")
+    @Expose
+    var outlet_purchase_yes_qty_purchase_before_visit: String = "",
+    @SerializedName("outlet_purchase_no_reason")
+    @Expose
+    var outlet_purchase_no_reason: String = "",
+    @SerializedName("starting_time")
+    @Expose
+    var starting_time: String = "",
+    @SerializedName("confirmphone")
+    @Expose
+    var confirmphone: String = "",
+    @SerializedName("visitpurchase")
+    @Expose
+    var visitpurchase: String = ""
 )
 
 data class PostToServerResponse(
@@ -94,7 +124,11 @@ data class Sales_Rep_Child_Model (
     var rep_edcode: String = "",
     @SerializedName("rep_id")
     @Expose
-    var rep_id: Int = 0
+    var rep_id: Int = 0,
+    @SerializedName("route")
+    @Expose
+    var route: String = ""
+
 )
 
 data class LoginResponse (

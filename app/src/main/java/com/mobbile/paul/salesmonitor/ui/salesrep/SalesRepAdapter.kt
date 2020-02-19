@@ -13,9 +13,10 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.sales_rep_adapter_layout.view.*
 
 
-class SalesRepAdapter(private var mItems: List<Sales_Rep_Child_Model>, private var contexts: Context,
-                      val clickListener: (Sales_Rep_Child_Model) -> Unit
-):
+class SalesRepAdapter(
+    private var mItems: List<Sales_Rep_Child_Model>, private var contexts: Context,
+    val clickListener: (Sales_Rep_Child_Model) -> Unit
+) :
     RecyclerView.Adapter<SalesRepAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
@@ -26,7 +27,7 @@ class SalesRepAdapter(private var mItems: List<Sales_Rep_Child_Model>, private v
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         val item = mItems[p1]
-        p0.bind(item,clickListener)
+        p0.bind(item, clickListener)
     }
 
     override fun getItemCount(): Int {
@@ -37,7 +38,8 @@ class SalesRepAdapter(private var mItems: List<Sales_Rep_Child_Model>, private v
         private val TAG = "ModulesActivity"
     }
 
-    inner class ViewHolder(override val containerView: View): RecyclerView.ViewHolder(containerView),
+    inner class ViewHolder(override val containerView: View) :
+        RecyclerView.ViewHolder(containerView),
         LayoutContainer {
         fun bind(item: Sales_Rep_Child_Model, clickListener: (Sales_Rep_Child_Model) -> Unit) {
 
@@ -46,12 +48,11 @@ class SalesRepAdapter(private var mItems: List<Sales_Rep_Child_Model>, private v
             val drawable = TextDrawable.builder()
                 .buildRound(letter, generator.getRandomColor())
             containerView.imageView.setImageDrawable(drawable)
-            containerView.ed_code.text = item.rep_edcode
+            containerView.ed_code.text = item.rep_edcode + ", " + item.route
             containerView.tv_name.text = item.repname
             containerView.setOnClickListener {
                 clickListener(item)
             }
-
         }
     }
 }

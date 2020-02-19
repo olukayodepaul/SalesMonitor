@@ -1,6 +1,7 @@
 package com.mobbile.paul.salesmonitor.ui.main
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -14,7 +15,6 @@ import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.google.android.material.button.MaterialButton
-import com.mobbile.paul.salesmonitor.BaseActivity
 import com.mobbile.paul.salesmonitor.R
 import com.mobbile.paul.salesmonitor.model.PostToServerResponse
 import com.mobbile.paul.salesmonitor.model.PostToServer
@@ -22,9 +22,10 @@ import com.mobbile.paul.salesmonitor.ui.salesrep.SalesRep
 import com.mobbile.paul.salesmonitor.util.Util.prefencesData
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
 
     private lateinit var pagerAdapter: PaginationAdpter
@@ -44,10 +45,16 @@ class MainActivity : DaggerAppCompatActivity() {
     var smsToken: RadioButton? = null
     var totalVolume: String = ""
     var remarks: String = ""
+    var confirmPhone: RadioButton? = null
+    var outletPurchaseOnVisit: RadioButton? = null
 
     var repid: Int = 0
     var urno: Int = 0
     var buttonControl: Int = 0
+
+    var route: String = ""
+    var repname: String = ""
+    var start_time: String = ""
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +64,9 @@ class MainActivity : DaggerAppCompatActivity() {
         preferences = getSharedPreferences(prefencesData, Context.MODE_PRIVATE)
         repid = intent.getIntExtra("rep_id", 0)
         urno = intent.getIntExtra("urno", 0)
+        route = intent.getStringExtra("route")!!
+        repname = intent.getStringExtra("repname")!!
+        start_time = intent.getStringExtra("start_time")!!
 
         pagerAdapter = PaginationAdpter()
         pager.offscreenPageLimit = 3
@@ -64,9 +74,14 @@ class MainActivity : DaggerAppCompatActivity() {
         pager.beginFakeDrag()
         fab_2.visibility = View.GONE
         base_progress_bar.visibility = View.GONE
+        titles_m.text = "$repname ($route)"
 
         backbtn.setOnClickListener {
             onBackPressed()
+        }
+
+        t_volume.setOnClickListener {
+            showDatePicker()
         }
 
         outlet_seen.setOnCheckedChangeListener { group, checkedId ->
@@ -145,6 +160,8 @@ class MainActivity : DaggerAppCompatActivity() {
                     last_date_purchase_values.visibility = View.VISIBLE
                     product_seen_if_cus_r.visibility = View.VISIBLE
                     t_volume.visibility = View.VISIBLE
+                    product_seen_if_cus_r_q.visibility = View.VISIBLE
+                    t_volume_m.visibility = View.VISIBLE
                     purchase_reasons.visibility = View.GONE
                     purchase_reasons_values.visibility = View.GONE
                 }
@@ -153,6 +170,8 @@ class MainActivity : DaggerAppCompatActivity() {
                     last_date_purchase_values.visibility = View.GONE
                     product_seen_if_cus_r.visibility = View.GONE
                     t_volume.visibility = View.GONE
+                    product_seen_if_cus_r_q.visibility = View.GONE
+                    t_volume_m.visibility = View.GONE
                     purchase_reasons.visibility = View.VISIBLE
                     purchase_reasons_values.visibility = View.VISIBLE
                 }
@@ -207,28 +226,34 @@ class MainActivity : DaggerAppCompatActivity() {
     private fun cacheInLocalDb(l1: Int) {
         when (l1) {
             0 -> {
-                //do the next here
-                outletClass = outlet_class.selectedItem.toString()
+
                 groupButtonSeenOutlet = findViewById(outlet_seen.checkedRadioButtonId) ?: null
                 groupButtonNotSeenOutlet =
                     findViewById(outlet_not_seen_group.checkedRadioButtonId) ?: null
+                outletClass = outlet_class.selectedItem.toString()
 
-                if (outletClass == "Select Outlet Class" || groupButtonSeenOutlet == null) {
+                if (groupButtonSeenOutlet == null) {
                     Toast.makeText(
                         applicationContext,
-                        "Please Confirm Outlet and select outlet seen",
+                        "Please check Outlet Seen",
                         Toast.LENGTH_SHORT
                     ).show()
-                } else if (groupButtonSeenOutlet!!.text == "No" && groupButtonNotSeenOutlet == null) {
+                } else if (groupButtonSeenOutlet!!.text.toString() == "No" && groupButtonNotSeenOutlet == null) {
                     Toast.makeText(
                         applicationContext,
-                        "Please select, If Outlet not found",
+                        "Please check, if outlet not found and enter remark",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (groupButtonSeenOutlet!!.text.toString() == "Yes" && outletClass == "Select Outlet Class") {
+                    Toast.makeText(
+                        applicationContext,
+                        "Please select confirmation of outlet classification",
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
                     if (buttonControl == 1) {
                         pagination()
-                    } else if (buttonControl == 2) {
+                    } else {
                         callQuestionnareWithOutletSeen()
                     }
                 }
@@ -254,16 +279,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 base_progress_bar.visibility = View.VISIBLE
                 fab.visibility = View.GONE
                 totalVolume = t_volume.text.toString()
-
-                if (totalVolume.isNullOrEmpty()) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Please enter volume purchase",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    callQuestionnaireApi()
-                }
+                callQuestionnaireApi()
             }
         }
     }
@@ -278,8 +294,10 @@ class MainActivity : DaggerAppCompatActivity() {
         var TAG = "compafdndfnf"
     }
 
+    @SuppressLint("RestrictedApi")
     private fun callQuestionnareWithOutletSeen() {
-
+        base_progress_bar.visibility = View.VISIBLE
+        fab.visibility = View.GONE
         groupButtonSeenOutlet = findViewById(outlet_seen.checkedRadioButtonId) ?: null
         groupButtonNotSeenOutlet = findViewById(outlet_not_seen_group.checkedRadioButtonId) ?: null
         val supervisorId = preferences!!.getInt("pre_employee_id", 0)
@@ -292,14 +310,29 @@ class MainActivity : DaggerAppCompatActivity() {
         allData.custsatisfaction = ""
         allData.smstoken = ""
         allData.totalvolume = ""
-        allData.remarks = ""
+        allData.remarks = _remark_one.text.toString()
         allData.supervisorid = supervisorId
         allData.urno = urno
         allData.repid = repid
+        allData.if_incorrect_phone = ""
+        allData.if_open_market = ""
+        allData.if_customer_not_satisfy_reason = ""
+        allData.outlet_purchase_yes_qty_purchase = ""
+        allData.outlet_purchase_yes_last_puchase_before_visit = ""
+        allData.outlet_purchase_yes_qty_purchase_before_visit = ""
+        allData.outlet_purchase_no_reason = ""
+        allData.starting_time = start_time
+        allData.confirmphone = ""
+        allData.visitpurchase = ""
         vmodel.moveQuestionareToServer(allData).observe(this, pushDataToServer)
+
     }
 
+    @SuppressLint("RestrictedApi")
     private fun callQuestionnaireApi() {
+
+        base_progress_bar.visibility = View.VISIBLE
+        fab.visibility = View.GONE
 
         var outlets = ""
         outletClass = outlet_class.selectedItem.toString()
@@ -308,6 +341,8 @@ class MainActivity : DaggerAppCompatActivity() {
         customerBuyingFrom = findViewById(customer_buying_from.checkedRadioButtonId) ?: null
         custSatisfaction = findViewById(cust_satn.checkedRadioButtonId) ?: null
         smsToken = findViewById(sms_token.checkedRadioButtonId) ?: null
+        confirmPhone = findViewById(confirm_phone.checkedRadioButtonId) ?: null
+        outletPurchaseOnVisit = findViewById(outlet_puchase1.checkedRadioButtonId) ?: null
         totalVolume = t_volume.text.toString()
         remarks = remark.text.toString()
         val supervisorId = preferences!!.getInt("pre_employee_id", 0)
@@ -323,12 +358,23 @@ class MainActivity : DaggerAppCompatActivity() {
         allData.customeruyingfrom = (customerBuyingFrom!!.text as String?).toString()
         allData.custsatisfaction = (custSatisfaction!!.text as String?).toString()
         allData.smstoken = (smsToken!!.text as String?).toString()
-        allData.totalvolume = totalVolume
+        allData.totalvolume = ""
         allData.remarks = remarks
         allData.supervisorid = supervisorId
         allData.urno = urno
         allData.repid = repid
+        allData.if_incorrect_phone = enter_correct_phone_number_new.text.toString()
+        allData.if_open_market = if_whole_seller_re.text.toString()
+        allData.if_customer_not_satisfy_reason = visit_satis_2.text.toString()
+        allData.outlet_purchase_yes_qty_purchase = last_date_purchase_values.text.toString()
+        allData.outlet_purchase_yes_last_puchase_before_visit = t_volume.text.toString()
+        allData.outlet_purchase_yes_qty_purchase_before_visit = t_volume_m.text.toString()
+        allData.outlet_purchase_no_reason = purchase_reasons_values.text.toString()
+        allData.starting_time = start_time
+        allData.confirmphone = (confirmPhone!!.text as String?).toString()
+        allData.visitpurchase = (outletPurchaseOnVisit!!.text as String?).toString()
         vmodel.moveQuestionareToServer(allData).observe(this, pushDataToServer)
+
     }
 
     @SuppressLint("RestrictedApi")
@@ -345,6 +391,17 @@ class MainActivity : DaggerAppCompatActivity() {
         }
     }
 
+    private fun showDatePicker() {
+        val datePicker = DatePickerDialog(
+            this,
+            this,
+            Calendar.getInstance().get(Calendar.YEAR),
+            Calendar.getInstance().get(Calendar.MONTH) + 1,
+            Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        )
+        datePicker.show()
+    }
+
     private fun customeSuccessDialog() {
         val dialog = MaterialDialog(this)
             .cancelOnTouchOutside(false)
@@ -357,6 +414,11 @@ class MainActivity : DaggerAppCompatActivity() {
             dialog.dismiss()
         }
         dialog.show()
+    }
+
+    override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
+        val date = "$p1-$p2-$p3"
+        t_volume.setText(date)
     }
 }
 

@@ -37,42 +37,48 @@ class Login : BaseActivity() {
     }
 
     private fun setLogin() {
+
         showProgressBar(true)
-        val username: String = "david.m@mt3.com"//et_email.text.toString()
-        val password: String = "185"//et_password.text.toString()
+        val username: String = et_email.text.toString()  //"david.m@mt3.com"
+        val password: String = et_password.text.toString() //"185"
 
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(applicationContext, "Enter username and password", Toast.LENGTH_SHORT).show()
+            showProgressBar(false)
+            Toast.makeText(applicationContext, "Enter username and password", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
-            vmodel.setLogins(username, password).observe(this, Observer<LoginResponse> {
-                showProgressBar(false)
-                if (it == null) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Network issue, please try again later",
-                        Toast.LENGTH_SHORT
-                    ).show()
+        vmodel.setLogins(username, password).observe(this, Observer<LoginResponse> {
+
+            showProgressBar(false)
+            if (it == null) {
+                Toast.makeText(
+                    applicationContext,
+                    "Network issue, please try again later",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            } else {
+                if (it.status == 200 && it.messages == "OK") {
+                    preferences!!.edit().apply()
+                    val editor = preferences!!.edit()
+                    editor.clear()
+                    editor.putInt("pre_employee_id", it.supervisor_id)
+                    editor.putInt("pre_employee_region", it.region_id)
+                    editor.putInt("pre_employee_depot", it.depots_id)
+                    editor.apply()
+                    val intent = Intent(this, SalesRep::class.java)
+                    intent.flags =
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
                 } else {
-                    if (it.status == 200 && it.messages == "OK") {
-                        preferences!!.edit().apply()
-                        val editor = preferences!!.edit()
-                        editor.clear()
-                        editor.putInt("pre_employee_id", it.supervisor_id)
-                        editor.putInt("pre_employee_region", it.region_id)
-                        editor.putInt("pre_employee_depot", it.depots_id)
-                        editor.apply()
-                        val intent = Intent(this, SalesRep::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(applicationContext, it.notification, Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                    Toast.makeText(applicationContext, it.notification, Toast.LENGTH_SHORT)
+                        .show()
                 }
-            })
+            }
+
+        })
     }
 }

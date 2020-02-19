@@ -31,7 +31,7 @@ interface Api {
     ): Single<Response<Outlets_Parent_Model>>
 
     @Headers("Connection:close")
-    @POST("/api/supervisor_login")
+    @POST("/api/supervisors_login")
     fun setLogins(
         @Query("username") username: String,
         @Query("password") password: String
